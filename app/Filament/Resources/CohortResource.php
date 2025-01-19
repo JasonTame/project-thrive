@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CohortResource\Pages;
+use App\Filament\Resources\CohortResource\RelationManagers\MentorshipPairsRelationManager;
 use App\Models\Cohort;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
@@ -73,7 +74,7 @@ class CohortResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MentorshipPairsRelationManager::class,
         ];
     }
 
