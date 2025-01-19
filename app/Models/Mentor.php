@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Mentor extends Model
 {
@@ -20,9 +21,23 @@ class Mentor extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'approved' => 'boolean',
+        'is_approved' => 'boolean',
         'user_id' => 'integer',
     ];
+
+    public function scopeAvailableForCohort($query, $cohortId)
+    {
+        return $query->whereNotExists(function ($query) use ($cohortId) {
+            $query->from('cohort_mentorships')
+                ->whereColumn('cohort_mentorships.mentor_id', 'mentors.id')
+                ->where('cohort_mentorships.cohort_id', $cohortId);
+        });
+    }
+
+    public function scopeIsApproved($query)
+    {
+        return $query->where('is_approved', true);
+    }
 
     public function cohorts(): BelongsToMany
     {
@@ -34,6 +49,11 @@ class Mentor extends Model
         return $this->belongsToMany(Mentee::class, 'cohort_mentorships')
             ->withPivot('cohort_id')
             ->using(CohortMentorship::class);
+    }
+
+    public function mentorshipPairs(): HasMany
+    {
+        return $this->hasMany(CohortMentorship::class);
     }
 
     public function user(): BelongsTo
