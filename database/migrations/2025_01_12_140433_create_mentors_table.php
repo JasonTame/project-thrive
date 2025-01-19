@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->boolean('approved');
+            $table->boolean('is_approved')->default(false);
             $table->text('bio');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

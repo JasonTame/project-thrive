@@ -21,7 +21,7 @@ class MenteeFactory extends Factory
     public function definition(): array
     {
         return [
-            'approved' => $this->faker->boolean(),
+            'is_approved' => $this->faker->boolean(),
             'bio' => $this->faker->paragraph(),
             'user_id' => User::factory(),
         ];
